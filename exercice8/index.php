@@ -2,28 +2,51 @@
 /* variable pour remplacer automatiquement la valeur 'ex=1,2,3...' dans header.php */
 $exerciseNb = 8;
 include '../header.php';
-$start = 0;
-// tableau simple avec les mois de l'année
-$months = [
-  'janvier',
-  'février',
-  'mars',
-  'avril',
-  'mai',
-  'juin',
-  'juillet',
-  'aout',
-  'septembre',
-  'octobre',
-  'novembre',
-  'décembre'
-];
-print_r($months);
-  for ($start = 0; $start < sizeof($months); $start ++) {
-    $result = $months[$start];
-?>
-<p><?= $result ?></p>
+$lastname = '';
+$firstname = '';
+$gender = '';
+$message1 = '';
+$message2 = '';
+if (!empty($_POST['gender']) && !empty($_POST['lastname']) && !empty($_POST['firstname'])) {
+    $lastname = $_POST['lastname'];
+    $firstname = $_POST['firstname'];
+    $gender = $_POST['gender'];
+    if (isset($_FILES['userfile']) && $_FILES['userfile']['error'] == 0)
+        $fileinfo = pathinfo($_FILES['userfile']['name']);
+        $filename = $fileinfo['basename'];
+        $message1 = 'Merci ' .htmlspecialchars($gender). ' ' .htmlspecialchars($lastname). ' ' .htmlspecialchars($firstname);
+        $message2 = 'Votre fichier ' .htmlspecialchars($filename). ' a bien été choisi!';
+   } else {
+    $message2 = 'Veuillez réessayer, l\'envoi de votre fichier n\'a pas abouti';
+    ?>
+    <div class="container">
+        <div class="row justify-content-center">
+            <form action="#" method="POST" enctype="multipart/form-data">
+                <select class="form-group custom-select" name="gender">
+                    <option disabled selected="">civilité</option>
+                    <option value="Mr">Mr</option>
+                    <option value="Mme">Mme</option>
+                </select>
+                <div>
+                    <div class="form-group col">
+                        <label for="lastname">Nom</label>
+                        <input type="text" id="lastname" name="lastname" class="form-control" placeholder="Lobato Leao">
+                    </div>
+                    <div class="form-group col">
+                        <label for="firstname">Prénom</label>
+                        <input type="text" id="firstname" name="firstname" class="form-control" placeholder="Thyago">
+                    </div>
+                    <div class="form-group col">
+                        <label for="file">Veuillez choisir un fichier</label>
+                        <input type="file" id="firstname" name="userfile" class="form-control">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-dark">envoyer</button>
+            </form>
+        </div>
+    </div>
 <?php
-  }
+}
 ?>
-<?php include '../footer.php'; ?>
+<p> <?= $message1 ?> <br> <?= $message2 ?></p>
+<?php include '../footer.php';
